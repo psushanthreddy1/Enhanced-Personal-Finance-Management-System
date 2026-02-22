@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Finance App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    ✅ Enhanced Personal Finance Management System
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Auto Bank Transactions</h2>
+
+        <table>
+            <tr>
+                <th>Merchant</th>
+                <th>Amount</th>
+                <th>Category</th>
+            </tr>
+
+            {% for txn in transactions %}
+            <tr>
+                <td>{{txn.merchant}}</td>
+                <td>₹{{txn.amount}}</td>
+                <td>{{txn.category}}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+</div>
+<div class="card-box">
+  <a href="/categories" class="card-link">
+    📂 Category Group Setup
+  </a>
+</div>
+
+
+
+</body>
+</html>

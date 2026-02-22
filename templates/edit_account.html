@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Edit Account</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial;
+    }
+    .box {
+      width: 600px;
+      margin: 60px auto;
+      padding: 25px;
+      border-radius: 12px;
+      background: #1b1b1b;
+      border: 1px solid #333;
+    }
+    .form-control {
+      background: #111 !important;
+      border: 1px solid #444 !important;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h3>Edit Account</h3>
+  <hr>
+
+  <form action="/update-account/{{ account[0] }}" method="post">
+
+    <label>Account Category</label>
+    <input type="text" name="acc_category"
+           value="{{ account[1] }}" class="form-control mb-3">
+
+    <label>Account Type</label>
+    <input type="text" name="acc_type"
+           value="{{ account[2] }}" class="form-control mb-3">
+
+    <label>Account Name</label>
+    <input type="text" name="name"
+           value="{{ account[3] }}" class="form-control mb-3">
+
+    <label>Currency</label>
+    <input type="text" name="currency"
+           value="{{ account[4] }}" class="form-control mb-3">
+
+    <label>Balance</label>
+    <input type="number" name="balance"
+           value="{{ account[5] }}" class="form-control mb-3">
+
+    <label>Description</label>
+    <textarea name="description" class="form-control mb-3">{{ account[6] }}</textarea>
+
+    <button class="btn btn-warning px-4">Save Changes</button>
+    <a href="/accounts" class="btn btn-secondary px-4 ms-3">Cancel</a>
+
+  </form>
+</div>
+
+</body>
+</html>

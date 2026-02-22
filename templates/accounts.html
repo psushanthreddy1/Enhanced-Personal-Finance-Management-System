@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Accounts - MoneyMap</title>
+
+  <!-- ✅ Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      font-family: Arial;
+      color: white;
+    }
+
+     /* ✅ Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #000;
+      position: fixed;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .sidebar p {
+      font-size: 12px;
+      color: gray;
+      margin-top: 25px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px;
+      margin: 6px 0;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .sidebar a:hover {
+      background: orange;
+      color: black;
+    }
+
+    .content {
+      margin-left: 280px;
+      padding: 20px;
+    }
+
+    .main-box {
+      display: flex;
+      height: 92vh;
+          }
+
+    /* ✅ Left Panel Summary */
+
+    .calendar-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4da3ff;
+    cursor: pointer;
+}
+
+.calendar-text:hover {
+    color: orange;
+}
+
+    .account-panel {
+      width: 320px;
+      border-right: 1px solid #333;
+      background: #161616;
+    }
+
+    .summary {
+      padding: 15px;
+      border-bottom: 1px solid #333;
+      font-size: 14px;
+    }
+
+    .summary b {
+      color: orange;
+    }
+
+    /* ✅ Right Panel */
+    .right-panel {
+  flex: 1;
+  padding: 25px;
+  height: 92vh;          /* fixed height */
+  overflow-y: auto;      /* enable vertical scroll */
+}
+
+    /* ✅ Button */
+    .add-btn {
+      background: #333;
+      border: 1px solid #555;
+      padding: 6px 14px;
+      border-radius: 8px;
+      color: white;
+    }
+
+    .add-btn:hover {
+      border-color: orange;
+      color: orange;
+    }
+
+    /* ✅ Form Inputs */
+    .form-control {
+      background: #111 !important;
+      border: 1px solid #444 !important;
+      color: white !important;
+    }
+
+    /* ✅ Toolbar Links */
+    .toolbar a {
+      text-decoration: none;
+      font-size: 15px;
+      color: #bbb;
+      margin-right: 22px;
+    }
+
+    .toolbar a:hover {
+      color: orange;
+    }
+
+    .toolbar .active {
+      color: orange;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    let input = document.getElementById("hiddenDate");
+    let display = document.getElementById("selectedDate");
+
+    if (input && input.value) {
+        let date = new Date(input.value);
+        let options = { month: 'short', day: '2-digit', year: 'numeric' };
+        display.innerText = date.toLocaleDateString('en-US', options) + " ▼";
+    }
+
+});
+</script>
+
+
+<script>
+function openCalendar() {
+    document.getElementById("hiddenDate").showPicker();
+}
+
+function updateDate(value) {
+
+    let date = new Date(value);
+
+    let options = { month: 'short', day: '2-digit', year: 'numeric' };
+    let formatted = date.toLocaleDateString('en-US', options);
+
+    document.getElementById("selectedDate").innerText = formatted + " ▼";
+
+    // Later we will filter accounts using this date
+}
+</script>
+
+
+<body>
+
+<!-- ✅ Sidebar -->
+<div class="sidebar">
+
+  <h3>Money Map</h3>
+
+  <!-- Overview -->
+  <a href="/{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+    🏠 Overview
+  </a>
+
+
+  <!-- Transaction Section -->
+  <p>TRANSACTION DATA</p>
+ <a href="/transactions{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  📄 Transaction Details
+</a>
+   <a href="/analysis{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  📊 Statistics & Analysis
+</a>
+  
+
+  <!-- Basis Data -->
+  <p>BASIS DATA</p>
+  <a href="/accounts{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  🏦 Accounts
+</a>
+
+  <a href="/categories{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  📂 Transaction Categories
+</a>
+
+<a href="/budget{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  💰 Budget Planner
+</a>
+
+<a href="/alerts{% if selected_date %}?selected_date={{ selected_date }}{% endif %}">
+  🚨 Alerts
+</a>
+</div>
+
+
+
+<!-- ✅ Main Content -->
+<div class="content">
+  <div class="main-box">
+
+    <!-- ✅ Left Panel -->
+    <div class="account-panel">
+      <div class="calendar-wrapper mb-3">
+
+    <form method="get" action="/accounts" id="dateForm">
+
+        <!-- Visible Styled Date -->
+        <span id="selectedDate"
+              class="calendar-text"
+              onclick="document.getElementById('hiddenDate').showPicker();">
+
+            {{ selected_date if selected_date else "Select Date" }} ▼
+        </span>
+
+        <!-- Hidden Real Date Input -->
+        <input type="date"
+               name="selected_date"
+               id="hiddenDate"
+               value="{{ selected_date }}"
+               style="display:none;"
+               onchange="document.getElementById('dateForm').submit();">
+    </form>
+
+</div>
+
+
+   
+
+    <!-- ✅ Summary -->
+    <div class="summary">
+        <span>Net Assets: <b>₹{{ net_assets }}</b></span><br>
+        <span>Total Liabilities: <b>₹{{ total_liabilities }}</b></span><br>
+        <span>Total Assets: <b>₹{{ total_assets }}</b></span>
+    </div>
+
+</div>
+
+
+
+    <!-- ✅ Right Panel -->
+    <div class="right-panel">
+
+      <!-- ✅ Top Bar -->
+      <div class="d-flex justify-content-between align-items-center">
+        <h3>Account List</h3>
+
+        <button class="add-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#addAccountModal">
+          Add
+        </button>
+      </div>
+
+      <hr style="border-color:#333;">
+
+      <!-- ✅ Show Accounts -->
+      {% if accounts|length == 0 %}
+  <p class="text-warning">No accounts found for selected date</p>
+{% else %}
+
+
+        {% for acc in accounts %}
+        <div class="card bg-dark text-white p-4 mb-4"
+             style="border:1px solid #333; border-radius:15px;">
+
+          <!-- ✅ Account Header -->
+          <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+              <h5 style="margin:0;">💼 {{ acc[3] }}</h5>
+              <small class="text-muted">{{ acc[4] }}</small>
+            </div>
+
+            <!-- ✅ Balance Hidden Toggle -->
+            <div style="font-size:22px; font-weight:bold; color:orange;">
+              {% if acc[7] == 1 %}
+                ₹ ******
+              {% else %}
+                ₹{{ acc[5] }}
+              {% endif %}
+            </div>
+          </div>
+
+          <hr style="border-color:#333;">
+
+          <!-- ✅ Toolbar -->
+          <div class="toolbar d-flex align-items-center">
+
+            <!-- Transaction List -->
+            <a href="/details/{{ acc[0] }}" class="active">
+              📋 Transaction List
+            </a>
+
+            <!-- Reconciliation -->
+            <a href="/reconciliation/{{ acc[0] }}">
+              🧾 Reconciliation Statement
+            </a>
+
+            <!-- Edit -->
+            <a href="/edit-account/{{ acc[0] }}">
+              ✏️ Edit
+            </a>
+
+            <!-- Hide Amount -->
+            <a href="/hide-account/{{ acc[0] }}"
+               onclick="return confirm('Hide/Show Amount?')">
+              👁 Hide
+            </a>
+
+            <!-- Dropdown More -->
+            <div class="dropdown">
+              <button class="btn btn-sm btn-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown">
+                More
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-dark">
+
+                <li>
+                  <a class="dropdown-item"
+                     href="/details/{{ acc[0] }}">
+                    🔍 View Details
+                  </a>
+                </li>
+
+                <li>
+                  <a class="dropdown-item text-danger"
+                     href="/delete-account/{{ acc[0] }}"
+                     onclick="return confirm('Delete Account Permanently?')">
+                    🗑 Delete Account
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- ✅ Description -->
+          <p class="text-muted mt-3">
+            {{ acc[6] }}
+          </p>
+
+        </div>
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<select name="acc_category" class="form-control mb-3">
+  <option value="asset">Cash</option>
+  <option value="asset">Savings</option>
+  <option value="asset">Debit Card</option>
+
+  <option value="liability">Credit Card</option>
+  <option value="liability">Loan</option>
+</select>
+
+
+
+
+<!-- ✅ Add Account Modal -->
+<div class="modal fade" id="addAccountModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-white p-4">
+
+      <h3>Add Account</h3>
+      <hr>
+
+      <form action="/add-account" method="post">
+
+        <!-- Category -->
+        <label>Account Category</label>
+        <select name="acc_category" class="form-control mb-3">
+          <option>Cash</option>
+          <option>Savings</option>
+          <option>Debit Card</option>
+        </select>
+
+        <!-- Type -->
+        <label>Account Type</label>
+        <select name="acc_type" class="form-control mb-3">
+  <option value="asset">Asset</option>
+  <option value="liability">Liability</option>
+</select>
+
+
+        <!-- Name -->
+        <label>Account Name</label>
+        <input type="text" name="name"
+               class="form-control mb-3" required>
+
+        <!-- Currency -->
+        <label>Currency</label>
+        <select name="currency" class="form-control mb-3">
+          <option>Indian Rupee (INR)</option>
+          <option>United States Dollar (USD)</option>
+        </select>
+
+        <!-- Balance -->
+        <label>Account Balance</label>
+        <input type="number" name="balance"
+               class="form-control mb-3" required>
+
+        <!-- Description -->
+        <label>Description</label>
+        <textarea name="description"
+                  class="form-control mb-3"
+                  rows="3"></textarea>
+
+        <!-- Buttons -->
+        <div class="text-center">
+          <button class="btn btn-warning px-4">Add</button>
+
+          <button type="button"
+                  class="btn btn-secondary px-4 ms-3"
+                  data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ✅ Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

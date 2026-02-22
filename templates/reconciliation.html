@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reconciliation Statement</title>
+</head>
+<body style="background:#111;color:white;font-family:Arial;padding:30px;">
+
+  <h2>Reconciliation Statement</h2>
+  <p><b>Account:</b> {{ account[3] }}</p>
+
+  <hr>
+
+  <h4>Opening Balance: ₹0.00</h4>
+  <h4>Closing Balance: ₹{{ account[5] }}</h4>
+
+  <br>
+
+  <table border="1" cellpadding="10" style="width:100%;border-collapse:collapse;">
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Description</th>
+    </tr>
+
+    <tr>
+      <td>Today</td>
+      <td>Balance Added</td>
+      <td>₹{{ account[5] }}</td>
+      <td>Initial Account Balance</td>
+    </tr>
+
+  </table>
+
+  <br>
+  <a href="/accounts" style="color:orange;">⬅ Back</a>
+
+</body>
+</html>

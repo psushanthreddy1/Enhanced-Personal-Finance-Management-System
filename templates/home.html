@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Enhanced Personal Finance Management System</title>
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      font-family: Arial;
+      color: white;
+    }
+
+    /* ✅ Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #000;
+      position: fixed;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .sidebar p {
+      font-size: 12px;
+      color: gray;
+      margin-top: 25px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px;
+      margin: 6px 0;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    .sidebar a:hover {
+      background: orange;
+      color: black;
+    }
+
+    /* ✅ Main Content */
+    .content {
+      margin-left: 280px;
+      padding: 30px;
+    }
+
+    /* ✅ Dashboard Cards */
+    .box {
+      background: #222;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0px 3px 8px black;
+    }
+
+    .money-red {
+      color: #ff4d4d;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .money-green {
+      color: #00ffaa;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+<!-- ✅ LEFT SIDEBAR -->
+<div class="sidebar">
+
+  <h3>Money Map</h3>
+
+  <!-- Overview -->
+  <a href="/">🏠 Overview</a>
+
+  <!-- Transaction Section -->
+  <p>TRANSACTION DATA</p>
+  <a href="/transactions">📄 Transaction Details</a>
+  <a href="/analysis">📊 Statistics & Analysis</a>
+  
+
+  <!-- Basis Data -->
+  <p>BASIS DATA</p>
+  <a href="/accounts">🏦 Accounts</a>
+  <a href="/categories">📂 Transaction Categories</a>
+  <a href="/budget">💰 Budget Planner</a>
+  <a href="/alerts">🚨 Alerts</a>
+
+</div>
+
+<!-- ✅ MAIN DASHBOARD CONTENT -->
+<div class="content">
+<form method="get" action="/" class="mb-4">
+  <input type="month"
+         name="selected_month"
+         value="{{ selected_month }}"
+         class="form-control bg-dark text-white border-secondary"
+         onchange="this.form.submit()">
+</form>
+  <!-- ✅ Top Cards Row -->
+  <div class="row g-4">
+
+    <!-- January Expense -->
+    <div class="col-md-6">
+      <div class="box">
+        <h3>{{ selected_month }} Expense</h3>
+        <h2 class="money-red">₹ {{ month_expense }}</h2>
+        <p class="text-muted">Monthly income ₹ {{ month_income }}</p>
+        <a href="/transactions" class="btn btn-warning mt-2">View Details</a>
+      </div>
+    </div>
+
+    <!-- Asset Summary -->
+    <div class="col-md-6">
+      <div class="box">
+        <h3>Asset Summary</h3>
+        <p>You have recorded {{ accounts|length }} accounts</p>
+
+        <div class="d-flex justify-content-between mt-3">
+         <div>
+  <h6>Total Assets</h6>
+  <div id="totalAssets">₹ {{ total_assets }}</div>
+</div>
+
+<div>
+  <h6>Total Liabilities</h6>
+  <div id="totalLiabilities">₹ {{ total_liabilities }}</div>
+</div>
+
+<div>
+  <h6>Net Assets</h6>
+  <div id="netAssets">₹ {{ net_assets }}</div>
+</div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ Small Cards Row -->
+  <div class="row g-4 mt-4">
+
+    <div class="col-md-3">
+      <div class="box">
+        <h5>Today</h5>
+        <p class="money-red">₹ {{ today_expense }}</p>
+        <p class="money-green">₹ {{ today_income }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="box">
+        <h5>This Week</h5>
+        <p class="money-red">₹ {{ week_expense }}</p>
+        <p class="money-green">₹ {{ week_income }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="box">
+        <h5>This Month</h5>
+        <p class="money-red">₹ {{ month_expense }}</p>
+        <p class="money-green">₹ {{ month_income }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="box">
+        <h5>This Year</h5>
+        <p class="money-red">₹ {{ year_expense }}</p>
+        <p class="money-green">₹ {{ year_income }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ✅ Trend Chart Section -->
+  <div class="box mt-4">
+    <h4>Income and Expense Trends</h4>
+    <p class="text-muted text-center mt-4">No data</p>
+  </div>
+
+</div>
+
+</body>
+</html>
