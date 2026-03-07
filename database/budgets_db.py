@@ -20,13 +20,28 @@ def init_budget_table():
 
 
 def add_budget(category, amount, month):
+
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO budgets (category, amount, month)
-        VALUES (?, ?, ?)
-    """, (category, amount, month))
+        SELECT id FROM budgets
+        WHERE category=? AND month=?
+    """,(category,month))
+
+    exists = cursor.fetchone()
+
+    if exists:
+        cursor.execute("""
+            UPDATE budgets
+            SET amount=?
+            WHERE category=? AND month=?
+        """,(amount,category,month))
+    else:
+        cursor.execute("""
+            INSERT INTO budgets (category,amount,month)
+            VALUES (?,?,?)
+        """,(category,amount,month))
 
     conn.commit()
     conn.close()
@@ -58,15 +73,18 @@ def save_budget(category, month, budget_amount):
     conn.commit()
     conn.close()
 
-def delete_budget(budget_id):
+def delete_budget(category, month):
+
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM budgets WHERE id = ?", (budget_id,))
+    cursor.execute("""
+        DELETE FROM budgets
+        WHERE category = ? AND month = ?
+    """, (category, month))
 
     conn.commit()
     conn.close()
-
 
 def update_budget(budget_id, category, amount):
     conn = sqlite3.connect(DB_NAME)

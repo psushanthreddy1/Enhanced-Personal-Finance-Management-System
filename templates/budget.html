@@ -88,6 +88,7 @@
   <p>TRANSACTION DATA</p>
   <a href="/transactions">📄 Transaction Details</a>
   <a href="/analysis">📊 Statistics & Analysis</a>
+  <a href="/forecast">🔮 Prediction</a>
   
 
   <!-- Basis Data -->
@@ -110,9 +111,12 @@
 
       <input type="hidden" name="month" value="{{ month }}">
 
-      <label>Category</label>
-      <input type="text" name="category"
-             class="form-control mb-3" required>
+     <label>Category</label>
+<input type="text"
+       name="category"
+       class="form-control"
+       placeholder="Enter category "
+       required>
 
       <label>Budget Amount</label>
       <input type="number" name="amount"
@@ -124,46 +128,73 @@
 
   </div>
 
-  <!-- Budget Table -->
-  <div class="card-box">
+<!-- Budget Table -->
+<div class="card-box">
 
-    <h4>Budgets for {{ month }}</h4>
+<h4>Budgets for {{ month }}</h4>
 
-   
-    <table class="table table-dark table-hover">
-    <thead>
-        <tr>
-            <th>Category</th>
-            <th>Budget</th>
-            <th>Spent</th>
-            <th>Remaining</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for b in budgets %}
-        <tr>
-            <td>{{ b[0] }}</td>
-            <td>₹ {{ b[1] }}</td>
-            <td>₹ {{ b[2] }}</td>
-            <td>
-                {% if b[3] < 0 %}
-                    <span class="text-danger">
-                        ₹ {{ b[3] }}
-                    </span>
-                {% else %}
-                    <span class="text-success">
-                        ₹ {{ b[3] }}
-                    </span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<table class="table table-dark table-hover">
+<thead>
+<tr>
+<th>Category</th>
+<th>Budget</th>
+<th>Spent</th>
+<th>Remaining</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{% for b in budgets %}
+<tr>
+
+<td>{{ b[0] }}</td>
+
+<td>₹ {{ b[1] }}</td>
+
+<td>₹ {{ b[2] }}</td>
+
+<td>
+{% if b[3] < 0 %}
+<span class="text-danger">₹ {{ b[3] }}</span>
+{% else %}
+<span class="text-success">₹ {{ b[3] }}</span>
+{% endif %}
+</td>
+
+<td>
+
+<!-- Delete Button -->
+<a href="/delete-budget/{{ b[0] }}"
+   class="btn btn-sm btn-danger">
+   Delete
+</a>
+
+<!-- Edit Button -->
+<button class="btn btn-sm btn-warning"
+        onclick="editBudget('{{ b[0] }}','{{ b[1] }}')">
+   Edit
+</button>
+
+</td>
+
+</tr>
+{% endfor %}
+</tbody>
 </table>
 
-  </div>
+</div>
 
 </div>
+
+<script>
+function editBudget(category, amount){
+
+document.querySelector('input[name="category"]').value = category;
+document.querySelector('input[name="budget_amount"]').value = amount;
+
+}
+</script>
 
 </body>
 </html>

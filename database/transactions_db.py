@@ -134,7 +134,25 @@ def get_transactions_summary(selected_date=None):
     return total_income, total_expense, net_balance
 
 
+def get_all_categories():
 
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DISTINCT category
+        FROM transactions
+        WHERE category IS NOT NULL
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    categories = []
+    for row in rows:
+        categories.append(row[0])
+
+    return categories
 def get_transactions_by_month(month):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()

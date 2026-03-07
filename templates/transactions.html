@@ -64,7 +64,7 @@
     }
 
     .table-scroll{
-    max-height: 420px;
+    max-height: 500px;
     overflow-y: auto;
     border-radius:10px;
     }
@@ -227,6 +227,7 @@
   <p>TRANSACTION DATA</p>
   <a href="/transactions">📄 Transaction Details</a>
   <a href="/analysis">📊 Statistics & Analysis</a>
+  <a href="/forecast">🔮 Prediction</a>
   
 
   <!-- Basis Data -->
@@ -332,7 +333,7 @@
         class="search-box me-2"
         name="search"
         value="{{ search if search else '' }}"
-        placeholder="Search merchant, category, account...">
+        placeholder="Search Transactions">
 
     <button class="btn btn-warning btn-sm">
         Search
@@ -502,15 +503,17 @@
       <h4>Add New Transaction</h4>
       <hr>
 
-      <form action="/save-transaction" method="post">
+     <form action="/save-transaction" method="post">
 
-        <label>Merchant</label>
-        <input type="text" name="merchant"
-               class="form-control mb-3" required>
+<label>Merchant</label>
+<input type="text" name="merchant"
+       class="form-control mb-3" required>
 
-        <label>Amount</label>
-        <input type="number" name="amount"
-               class="form-control mb-3" required>
+
+
+<label>Amount</label>
+<input type="number" name="amount"
+       class="form-control mb-3" required>
 
         <label>Select Account</label>
         <select name="account_id" class="form-control mb-3">
@@ -569,18 +572,15 @@ function openEditModal(id, merchant, amount, account_id, txn_type, txn_date) {
 
       <form id="editForm" method="post">
 
-        <input type="hidden" name="txn_id" id="edit_txn_id">
+       
+ 
+      <label>Merchant</label>
+      <input type="text" name="merchant" class="form-control mb-3" required>
 
-        <label>Merchant</label>
-        <input type="text" name="merchant"
-               id="edit_merchant"
-               class="form-control mb-3" required>
+      
 
-        <label>Amount</label>
-        <input type="number" name="amount"
-               id="edit_amount"
-               class="form-control mb-3" required>
-
+      <label>Amount</label>
+      <input type="number" name="amount" class="form-control mb-3" required>
         <label>Select Account</label>
 <select name="account_id"
         id="edit_account"

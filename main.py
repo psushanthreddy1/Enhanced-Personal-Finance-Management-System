@@ -358,17 +358,26 @@ def save_transaction(
 
     merchant_lower = merchant.lower()
 
+    # ✅ Default category (VERY IMPORTANT)
+    category = "Other Expense"
+
     # ---------- CATEGORY LOGIC ----------
     if txn_type == "expense":
 
         if "grocery" in merchant_lower:
             category = "Groceries"
+
         elif "rent" in merchant_lower:
             category = "Rent"
+
         elif "food" in merchant_lower:
             category = "Food"
-        else:
-            category = "Other Expense"
+
+        elif "trip" in merchant_lower or "travel" in merchant_lower:
+            category = "Trip"
+
+        elif "petrol" in merchant_lower:
+            category = "Petrol"
 
     else:
         category = "Other Income"
@@ -430,17 +439,23 @@ def update_transaction_route(
     merchant_lower = merchant.lower()
 
     if txn_type == "expense":
-        if "grocery" in merchant_lower:
-            category = "Groceries"
-        elif "rent" in merchant_lower:
-            category = "Rent"
-        elif "food" in merchant_lower:
-            category = "Food"
-        else:
-            category = "Other Expense"
-    else:
-        category = "Other Income"
 
+     if "grocery" in merchant_lower:
+        category = "Groceries"
+
+     elif "rent" in merchant_lower:
+        category = "Rent"
+
+     elif "food" in merchant_lower:
+        category = "Food"
+
+    elif "trip" in merchant_lower or "travel" in merchant_lower:
+        category = "Trip"
+
+    else:
+        category = merchant
+
+    
     from database.transactions_db import update_transaction_by_id
 
     update_transaction_by_id(
@@ -454,12 +469,38 @@ def update_transaction_route(
     )
 
     return RedirectResponse("/transactions", status_code=303)
+
+@app.get("/forecast", response_class=HTMLResponse)
+def forecast(request: Request):
+
+    months, income, expense = get_monthly_income_expense_trend()
+
+    # Simple prediction (average based)
+    if len(expense) > 0:
+        predicted = sum(expense) / len(expense)
+    else:
+        predicted = 0
+
+    months.append("Next Month")
+    expense.append(predicted)
+
+    return templates.TemplateResponse(
+        "forecast.html",
+        {
+            "request": request,
+            "months": months,
+            "expense": expense,
+            "prediction": round(predicted,2),
+            "page": "forecast"
+        }
+    )
 # ============================================================
 # ✅ OTHER PAGES
 # ============================================================
 
 from database.transactions_db import get_spent_by_category_and_month
 from database.budgets_db import get_budgets  # if you have this
+from database.transactions_db import get_all_categories
 
 @app.get("/budget", response_class=HTMLResponse)
 def budget(request: Request):
@@ -468,6 +509,7 @@ def budget(request: Request):
     current_month = today.strftime("%Y-%m")
 
     budgets = get_budgets(current_month)
+    categories = get_all_categories()  # ✅ Get all categories for dropdown
 
     updated_budgets = []
     alerts = []   # 🔥 NEW
@@ -498,6 +540,7 @@ def budget(request: Request):
             "request": request,
             "budgets": updated_budgets,
             "month": current_month,
+            "categories":categories,
             "alerts": alerts   # 🔥 PASS ALERTS
         }
     )
@@ -507,7 +550,11 @@ def create_budget(
     amount: float = Form(...),
     month: str = Form(...)
 ):
+
+    category = category.strip().capitalize()
+
     add_budget(category, amount, month)
+
     return RedirectResponse("/budget", status_code=303)
 
 @app.post("/save-budget")
@@ -520,6 +567,31 @@ def save_budget_route(
     save_budget(category, month, budget_amount)
 
     return RedirectResponse("/budget", status_code=303)
+
+@app.get("/delete-budget/{category}")
+def delete_budget_route(category: str):
+
+    month = datetime.now().strftime("%Y-%m")
+
+    from database.budgets_db import delete_budget
+
+    delete_budget(category, month)
+
+    return RedirectResponse("/budget", status_code=303)
+
+@app.post("/update-budget")
+def update_budget_route(
+    category: str = Form(...),
+    amount: float = Form(...)
+):
+
+    from database.budgets_db import update_budget
+
+    update_budget(category, amount)
+
+    return RedirectResponse("/budget", status_code=303)
+
+
 
 @app.get("/categories", response_class=HTMLResponse)
 def categories_page(request: Request):

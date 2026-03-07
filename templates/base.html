@@ -14,105 +14,94 @@
       font-family: Arial;
       color: white;
     }
-
     /* ✅ Sidebar */
     .sidebar {
-      width: 270px;
+      width: 260px;
       height: 100vh;
-      position: fixed;
       background: #000;
-      padding: 25px;
+      position: fixed;
+      padding: 20px;
       overflow-y: auto;
     }
 
-    .sidebar h1 {
-      font-size: 30px;
+    .sidebar h3 {
       font-weight: bold;
       margin-bottom: 30px;
     }
 
-    .section-title {
+    .sidebar p {
       font-size: 12px;
-      color: #666;
+      color: gray;
       margin-top: 25px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
     }
 
     .sidebar a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: block;
       padding: 12px;
       margin: 6px 0;
       color: white;
       text-decoration: none;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .sidebar a:hover {
       background: orange;
       color: black;
     }
-
+    .sidebar .section-title {
+    font-size: 12px;
+    color: #666;
+    margin: 25px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: normal;
+}
     .active-link {
       background: orange;
       color: black !important;
       font-weight: bold;
     }
 
-    /* ✅ Main Content */
+    /* Content */
     .content {
-      margin-left: 300px;
-      padding: 25px;
+      margin-left: 280px;
+      padding: 20px;
+    }
+
+    .main-box {
+      display: flex;
+      height: 92vh;
+      background: #1b1b1b;
+      border-radius: 12px;
     }
   </style>
 </head>
 
 <body>
 
-<!-- ✅ Sidebar (Same on Every Page) -->
+<!-- Sidebar -->
 <div class="sidebar">
-  <h1>Money Map</h1>
 
-  <a href="/" class="{% if page=='overview' %}active-link{% endif %}">
-    🏠 Overview
-  </a>
+  <h3>Money Map</h3>
 
-  <div class="section-title">Transaction Data</div>
+  <!-- Overview -->
+  <a href="/">🏠 Overview</a>
 
-  <a href="/transactions" class="{% if page=='transactions' %}active-link{% endif %}">
-    📄 Transaction Details
-  </a>
+  <!-- Transaction Section -->
+  <p>TRANSACTION DATA</p>
+  <a href="/transactions">📄 Transaction Details</a>
+  <a href="/analysis">📊 Statistics & Analysis</a>
+  <a href="/forecast">🔮 Prediction</a>
+  
 
-  <a href="/analysis" class="{% if page=='analysis' %}active-link{% endif %}">
-    📊 Statistics & Analysis
-  </a>
+  <!-- Basis Data -->
+  <p>BASIS DATA</p>
+  <a href="/accounts">🏦 Accounts</a>
+  <a href="/categories">📂 Transaction Categories</a>
+  <a href="/budget">💰 Budget Planner</a>
+  <a href="/alerts">🚨 Alerts</a>
 
-  <div class="section-title">Basis Data</div>
-
-  <a href="/accounts" class="{% if page=='accounts' %}active-link{% endif %}">
-    🏦 Accounts
-  </a>
-
-  <a href="/budget" class="{% if page=='budget' %}active-link{% endif %}">
-    💰 Budget Planner
-  </a>
-
-  <a href="/alerts" class="{% if page=='alerts' %}active-link{% endif %}">
-    🚨 Alerts
-  </a>
-
-  <a href="/categories" class="{% if page=='categories' %}active-link{% endif %}">
-    📂 Transaction Categories
-  </a>
-
-  <div class="section-title">Miscellaneous</div>
-
-  <a href="/exchange" class="{% if page=='exchange' %}active-link{% endif %}">
-    💱 Exchange Rates
-  </a>
 </div>
 
 <!-- ✅ Page Content -->
