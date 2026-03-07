@@ -5,6 +5,8 @@ numpy
 scikit-learn
 xgboost
 statsmodels
-
+openpyxl
 sqlalchemy
 joblib
+jinja2
+python-multipart
