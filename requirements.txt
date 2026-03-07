@@ -5,6 +5,6 @@ numpy
 scikit-learn
 xgboost
 statsmodels
-tensorflow
+
 sqlalchemy
 joblib
