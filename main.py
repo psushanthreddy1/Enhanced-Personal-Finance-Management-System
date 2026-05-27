@@ -362,33 +362,31 @@ def save_transaction(
 
     merchant_lower = merchant.lower()
 
-    # ✅ Default category (VERY IMPORTANT)
+    # Default category
     category = "Other Expense"
 
-    # ---------- CATEGORY LOGIC ----------
-   # CATEGORY LOGIC AGAIN
-merchant_lower = merchant.lower()
+    # CATEGORY LOGIC
+    if txn_type == "expense":
 
-if txn_type == "expense":
+        if "grocery" in merchant_lower:
+            category = "Groceries"
 
-    if "grocery" in merchant_lower:
-        category = "Groceries"
+        elif "rent" in merchant_lower:
+            category = "Rent"
 
-    elif "rent" in merchant_lower:
-        category = "Rent"
+        elif "food" in merchant_lower:
+            category = "Food"
 
-    elif "food" in merchant_lower:
-        category = "Food"
+        elif "trip" in merchant_lower or "travel" in merchant_lower:
+            category = "Trip"
 
-    elif "trip" in merchant_lower or "travel" in merchant_lower:
-        category = "Trip"
+        elif "petrol" in merchant_lower:
+            category = "Petrol"
 
     else:
-        category = merchant
+        category = "Other Income"
 
-else:
-    category = "Other Income"
-    # ---------- SAVE TRANSACTION ----------
+    # SAVE TRANSACTION
     add_transaction(
         merchant,
         amount,
@@ -398,21 +396,29 @@ else:
         txn_date
     )
 
-    # ---------- CHECK BUDGET ----------
+    # CHECK BUDGET
     alert_message = None
 
     if txn_type == "expense":
 
-        month = datetime.strptime(txn_date, "%Y-%m-%d").strftime("%Y-%m")
+        month = datetime.strptime(
+            txn_date,
+            "%Y-%m-%d"
+        ).strftime("%Y-%m")
+
         budgets = get_budgets(month)
 
         for b in budgets:
+
             budget_category = b[0]
             budget_amount = b[1]
 
             if budget_category == category:
 
-                spent = get_spent_by_category_and_month(category, month)
+                spent = get_spent_by_category_and_month(
+                    category,
+                    month
+                )
 
                 if spent > budget_amount:
 
@@ -421,16 +427,24 @@ else:
                         f"Budget: {budget_amount} | Spent: {spent}"
                     )
 
-                    add_alert(category, alert_message, month)
+                    add_alert(
+                        category,
+                        alert_message,
+                        month
+                    )
 
-    # ---------- REDIRECT (FIXED) ----------
-    response = RedirectResponse("/transactions", status_code=303)
+    response = RedirectResponse(
+        "/transactions",
+        status_code=303
+    )
 
     if alert_message:
-        response.set_cookie("budget_alert", alert_message)
+        response.set_cookie(
+            "budget_alert",
+            alert_message
+        )
 
     return response
-
 @app.post("/update-transaction/{txn_id}")
 def update_transaction_route(
     txn_id: int,
@@ -441,28 +455,29 @@ def update_transaction_route(
     txn_date: str = Form(...)
 ):
 
-    # CATEGORY LOGIC AGAIN
+    # CATEGORY LOGIC
     merchant_lower = merchant.lower()
-  if txn_type == "expense":
 
-    if "grocery" in merchant_lower:
-        category = "Groceries"
+    if txn_type == "expense":
 
-    elif "rent" in merchant_lower:
-        category = "Rent"
+        if "grocery" in merchant_lower:
+            category = "Groceries"
 
-    elif "food" in merchant_lower:
-        category = "Food"
+        elif "rent" in merchant_lower:
+            category = "Rent"
 
-    elif "trip" in merchant_lower or "travel" in merchant_lower:
-        category = "Trip"
+        elif "food" in merchant_lower:
+            category = "Food"
+
+        elif "trip" in merchant_lower or "travel" in merchant_lower:
+            category = "Trip"
+
+        else:
+            category = merchant
 
     else:
-        category = merchant
+        category = "Other Income"
 
-  else:
-    category = "Other Income"
-    
     from database.transactions_db import update_transaction_by_id
 
     update_transaction_by_id(
@@ -476,6 +491,7 @@ def update_transaction_route(
     )
 
     return RedirectResponse("/transactions", status_code=303)
+    
 
 @app.get("/forecast", response_class=HTMLResponse)
 def forecast(request: Request):
