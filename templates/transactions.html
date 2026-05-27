@@ -505,15 +505,21 @@
 
      <form action="/save-transaction" method="post">
 
+     <input type="hidden" id="edit_txn_id">
+
 <label>Merchant</label>
-<input type="text" name="merchant"
-       class="form-control mb-3" required>
-
-
+<input type="text"
+       id="edit_merchant"
+       name="merchant"
+       class="form-control mb-3"
+       required>
 
 <label>Amount</label>
-<input type="number" name="amount"
-       class="form-control mb-3" required>
+<input type="number"
+       id="edit_amount"
+       name="amount"
+       class="form-control mb-3"
+       required>
 
         <label>Select Account</label>
         <select name="account_id" class="form-control mb-3">
