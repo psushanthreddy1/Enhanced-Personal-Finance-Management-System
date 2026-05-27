@@ -54,7 +54,11 @@ from database.alerts_db import (
 )
 
 app = FastAPI()
+
 templates = Jinja2Templates(directory="templates")
+
+# Disable Jinja cache
+templates.env.cache = {}
 
 fetcher = BankTransactionFetcher()
 
