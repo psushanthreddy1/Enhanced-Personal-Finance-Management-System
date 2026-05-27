@@ -440,13 +440,13 @@ def update_transaction_route(
 
     if txn_type == "expense":
 
-     if "grocery" in merchant_lower:
+    if "grocery" in merchant_lower:
         category = "Groceries"
 
-     elif "rent" in merchant_lower:
+    elif "rent" in merchant_lower:
         category = "Rent"
 
-     elif "food" in merchant_lower:
+    elif "food" in merchant_lower:
         category = "Food"
 
     elif "trip" in merchant_lower or "travel" in merchant_lower:
@@ -455,6 +455,8 @@ def update_transaction_route(
     else:
         category = merchant
 
+else:
+    category = "Other Income"
     
     from database.transactions_db import update_transaction_by_id
 
