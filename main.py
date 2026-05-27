@@ -366,26 +366,28 @@ def save_transaction(
     category = "Other Expense"
 
     # ---------- CATEGORY LOGIC ----------
-    if txn_type == "expense":
+   # CATEGORY LOGIC AGAIN
+merchant_lower = merchant.lower()
 
-        if "grocery" in merchant_lower:
-            category = "Groceries"
+if txn_type == "expense":
 
-        elif "rent" in merchant_lower:
-            category = "Rent"
+    if "grocery" in merchant_lower:
+        category = "Groceries"
 
-        elif "food" in merchant_lower:
-            category = "Food"
+    elif "rent" in merchant_lower:
+        category = "Rent"
 
-        elif "trip" in merchant_lower or "travel" in merchant_lower:
-            category = "Trip"
+    elif "food" in merchant_lower:
+        category = "Food"
 
-        elif "petrol" in merchant_lower:
-            category = "Petrol"
+    elif "trip" in merchant_lower or "travel" in merchant_lower:
+        category = "Trip"
 
     else:
-        category = "Other Income"
+        category = merchant
 
+else:
+    category = "Other Income"
     # ---------- SAVE TRANSACTION ----------
     add_transaction(
         merchant,
