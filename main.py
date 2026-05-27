@@ -633,10 +633,6 @@ def category_detail(request: Request, group_name: str):
     )
 
 
-@app.get("/forecast", response_class=HTMLResponse)
-def forecast(request: Request):
-    return templates.TemplateResponse("forecast.html", {"request": request})
-
 @app.get("/alerts", response_class=HTMLResponse)
 def alerts(request: Request):
 
